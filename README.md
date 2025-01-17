@@ -55,9 +55,9 @@ The project is organized into the following directories:
 The application provides a user interface for managing courses, assignments, and exams. Navigate to `http://localhost:5000` in your web browser to access the platform.
 
 ## VIDEO 
-
-  aşağıdaki linkten izleyebilirsiniz:
-
+ aşağıdaki linkten izleyebilirsiniz:
+  
+# Video  Başlığı : Ağ tabanlı dersi videosu
 https://www.youtube.com/watch?v=qX514nRCDE0 
 
 
