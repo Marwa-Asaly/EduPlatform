@@ -54,24 +54,6 @@ The project is organized into the following directories:
 
 The application provides a user interface for managing courses, assignments, and exams. Navigate to `http://localhost:5000` in your web browser to access the platform.
 
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature-branch-name
-   ```
-3. Make your changes and commit them:
-   ```bash
-   git commit -m 'Description of changes'
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-branch-name
-   ```
-
 ## VIDEO 
 
   aşağıdaki linkten izleyebilirsiniz:
