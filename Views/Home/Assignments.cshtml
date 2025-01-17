@@ -1,0 +1,87 @@
+﻿@using EduPlatformProject.Classes
+@using EduPlatformProject.Resources
+@using Microsoft.Data.SqlClient
+@using Microsoft.Extensions.Localization
+@using System.Data
+@using System.Globalization
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = localizer["Assignments"];
+    DataTable tbl = ViewBag.Assignments;
+    var lang = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+}
+@inject IStringLocalizer<SharedResources> localizer
+
+<h1 class="mt-5 text-center">@ViewData["Title"]</h1>
+@if (Context.Session.GetString("id") != null)
+{
+    <div class="d-flex justify-content-center mt-3">
+        <a class="btn btn-outline-primary" href="/Home/createAssignment">
+            @localizer["CreateAssignment"]
+        </a>
+    </div>
+}
+
+<div class="container mt-5">
+    <div class="d-flex flex-column gap-3">
+        @for (int i = 0; i < tbl.Rows.Count; i++)
+        {
+            var item = tbl.Rows[i];
+            var submittions = GetSubmittions(item["id"].ToString());
+
+            <div class="border rounded p-3">
+                <h5>@(lang == "ar" ? item["title_ar"] : item["title_tr"])</h5>
+                <span class="text-secondary mt-2">
+                    @(lang == "ar" ? item["content_ar"] : item["content_tr"])
+                </span>
+                @for (int j = 0; j < submittions.Rows.Count; j++)
+                {
+                    var it = submittions.Rows[j];
+
+                    <div class="d-flex gap-3">
+                        <span>
+                            [@it["first_name"] @it["last_name"]]
+                        </span>
+                        <a href="javascript:void(0);"
+                           onclick="downloadBase64File('@it["file"]', 'assignment-submission.pdf')"
+                           title="download">
+                            assignment submission (@it["submitted_at"])
+                        </a>
+                    </div>
+                }
+
+                @if (Context.Session.GetString("id") != null && ((DateTime)item["deadline"]) >= DateTime.Now)
+                {
+                    <form class="mt-4" method="post" action="/home/submitAssignment" enctype="multipart/form-data">
+                        <input name="assignment_id" value="@item["id"]" hidden />
+                        <input class="form-control mb-3" name="file" type="file" accept=".pdf" required />
+                        <button class="btn btn-outline-primary">@localizer["EnterAssignment"]</button>
+                    </form>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    DataTable GetSubmittions(string id)
+    {
+        SqlDataAdapter cmd = new("SELECT * FROM assignment_submittions a LEFT JOIN users b ON a.submitted_by = b.id WHERE a.assignment_id = @i;", Database.ConnStr);
+        cmd.SelectCommand.Parameters.Add(new SqlParameter("@i", id));
+        DataTable tbl = new();
+        cmd.Fill(tbl);
+        return tbl;
+    }
+}
+
+<script>
+    function downloadBase64File(base64String, fileName) {
+        const linkSource = `data:application/pdf;base64,${base64String}`;
+        const downloadLink = document.createElement("a");
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+    }
+</script>

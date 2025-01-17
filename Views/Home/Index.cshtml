@@ -1,0 +1,101 @@
+﻿@using System.Data
+@using EduPlatformProject.Classes
+@using EduPlatformProject.Resources
+@using Microsoft.Data.SqlClient
+@using Microsoft.Extensions.Localization
+@using System.Globalization
+@{
+    ViewData["Title"] = localizer["Homepage"];
+    DataTable? categories = ViewBag.Categories;
+    DataTable? courses = ViewBag.Courses;
+    string lang = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+}
+@inject IStringLocalizer<SharedResources> localizer
+
+<h1 class="text-center mt-5">@localizer["Homepage"]</h1>
+
+@if (categories != null && categories.Rows.Count > 0)
+{
+    <div class="py-5 mt-5 bg-light">
+        <h3 class="text-center mb-4">@localizer["Categories"]</h3>
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                @for (int i = 0; i < categories.Rows.Count; i++)
+                {
+                    var item = categories.Rows[i];
+
+                    <div class="p-3 rounded bg-white">
+                        <img class="rounded bg-light shadow-sm mb-3 p-3 w-100" height="150" src='data:image/png;base64,@item["photo"]' />
+                        @if (lang == "ar")
+                        {
+                            <h4>@(item["title_ar"].ToString())</h4>
+                        }
+                        else
+                        {
+                            <h4>@(item["title_tr"].ToString())</h4>
+                        }
+                        <a class="btn btn-primary mt-3" href="/home/category/@item["id"]">@localizer["View"]</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@if (courses != null && courses.Rows.Count > 0)
+{
+    <div class="my-5">
+        <h3 class="text-center mb-4">@localizer["PopularCourses"]</h3>
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                @for (int i = 0; i < courses.Rows.Count; i++)
+                {
+                    var item = courses.Rows[i];
+
+                    <div class="p-3 px-5 rounded bg-light shadow">
+                        @if (lang == "ar")
+                        {
+                            <h4>@(item["title_ar"].ToString())</h4>
+                        }
+                        else
+                        {
+                            <h4>@(item["title_tr"].ToString())</h4>
+                        }
+                        <a class="btn btn-primary mt-3" href="/home/course/@item["id"]">@localizer["View"]</a>
+
+                        @if (Context.Session.GetString("id") != null)
+                        {
+                            bool inFav = InFav(item["id"].ToString());
+
+                            if (!inFav)
+                            {
+                                <a class="btn btn-danger mt-3" href="/home/addtofav/@item["id"]?returnUrl=@(Context.Request.Path + Context.Request.QueryString)">
+                                    @localizer["AddToFav"]
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger mt-3" href="/home/removeFromFav/@item["id"]?returnUrl=@(Context.Request.Path + Context.Request.QueryString)">
+                                    @localizer["RemoveFromFav"]
+                                </a>
+
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@functions {
+    bool InFav(string id)
+    {
+        SqlDataAdapter adp = new("SELECT * FROM favorites WHERE course_id = @a AND user_id = @b", Database.ConnStr);
+        adp.SelectCommand.Parameters.Add(new SqlParameter("@a", id));
+        adp.SelectCommand.Parameters.Add(new SqlParameter("@b", Context.Session.GetString("id")));
+        DataTable tbl = new();
+        adp.Fill(tbl);
+        return tbl.Rows.Count > 0;
+    }
+}

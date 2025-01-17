@@ -1,0 +1,30 @@
+﻿@using EduPlatformProject.Resources
+@using Microsoft.Extensions.Localization
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = localizer["SignUp"];
+}
+@inject IStringLocalizer<SharedResources> localizer;
+
+<section class="my-5 py-5">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6 p-3 shadow rounded bg-light">
+            <h3 class="text-center">@localizer["SignUp"]</h3>
+            <form class="d-flex flex-column gap-4 mt-4" action="/auth/signup" method="post">
+                <input class="form-control" placeholder="@localizer["FirstName"]" type="text" name="firstName" required />
+                <input class="form-control" placeholder="@localizer["LastName"]" type="text" name="lastName" required />
+                <input class="form-control" placeholder="@localizer["Email"]" type="email" name="email" dir="ltr" required />
+                <input class="form-control" placeholder="@localizer["Password"]" type="password" name="password" dir="ltr" required />
+                @if (ViewBag.Error != null)
+                {
+                    <div class="text-center text-danger">@ViewBag.Error</div>
+                }
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary">@localizer["SignUp"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
