@@ -2,6 +2,7 @@
 
 EduPlatform is a web application designed to facilitate online education by providing a platform for managing courses, assignments, and exams. This repository contains the source code for the EduPlatform project.
 
+<iframe width="922" height="390" src="https://www.youtube.com/embed/qX514nRCDE0" title="Ağ tabanlı dersi videosu" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 ## Project Structure
 
 The project is organized into the following directories:
