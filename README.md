@@ -31,7 +31,7 @@ The project is organized into the following directories:
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Visual Studio](https://visualstudio.microsoft.com/) or any other IDE supporting .NET development.
-- [MongoDB](https://www.mongodb.com/) for the database backend.
+- [SQLserver](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) for the database backend.
 
 ### Installation
 
